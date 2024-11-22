@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Simples</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Enviar Mensagem</h2>
+        <form id="simpleForm">
+            <input type="text" id="name" name="name" placeholder="Seu nome" required>
+            <textarea id="message" name="message" placeholder="Sua mensagem" rows="4" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <p id="responseMessage" class="response-message"></p>
+    </div>
+
+    <script>
+        const apiURL = 'https://sheetdb.io/api/v1/ufa64vhfre5pa'; // Substitua pela URL do SheetDB
+
+        document.getElementById('simpleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = { data: Object.fromEntries(formData.entries()) };
+            const responseMessage = document.getElementById('responseMessage');
+
+            try {
+                const response = await fetch(apiURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    responseMessage.textContent = "Mensagem enviada com sucesso!";
+                    responseMessage.style.color = "green";
+                    e.target.reset(); // Limpa o formulário
+                } else {
+                    throw new Error('Erro ao enviar os dados');
+                }
+            } catch (error) {
+                responseMessage.textContent = "Erro ao enviar a mensagem.";
+                responseMessage.style.color = "red";
+                console.error('Erro:', error);
+            }
+        });
+    </script>
+</body>
+</html>
